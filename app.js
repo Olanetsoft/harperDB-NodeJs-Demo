@@ -1,8 +1,5 @@
 require("dotenv").config();
 const db = require("./config/database");
-const { HARPERDB_URL, HARPERDB_TOKEN } = process.env;
-const axios = require("axios");
-
 const express = require("express");
 
 const app = express();
