@@ -39,9 +39,9 @@ app.post("/create/table", async (req, res) => {
   db.createTable(
     {
       operation: "create_table",
-      hash_attribute: "id",
       schema: body.schema,
       table: body.table,
+      hashAttribute: "id",
     },
     (err, response) => {
       if (err) {
@@ -53,100 +53,133 @@ app.post("/create/table", async (req, res) => {
   );
 });
 
-// Create Movies under action table
+// Create a Movie or Movies under action table
 app.post("/movie/action/create", async (req, res) => {
   const { body } = req;
 
-  try {
-    const response = await axios({
-      method: "post",
-      url: HARPERDB_URL,
-      data: body,
-      headers: {
-        Authorization: `Basic ${HARPERDB_TOKEN}`,
-      },
-    });
+  db.insert(
+    {
+      operation: "insert",
+      schema: body.schema,
+      table: body.table,
+      records: body.records,
+    },
+    (err, response) => {
+      if (err) {
+        return res.status(500).json(err);
+      }
 
-    res.json(response.data.message);
-  } catch (error) {
-    return res.json(error.response.data.error);
-  }
+      res.status(response.statusCode).json(response.data);
+    }
+  );
 });
 
 // Get all Movies under action table
-app.post("/movie/action", async (req, res) => {
+app.post("/movie/action/searchbyhash", async (req, res) => {
   const { body } = req;
 
-  try {
-    const response = await axios({
-      method: "post",
-      url: HARPERDB_URL,
-      data: body,
-      headers: {
-        Authorization: `Basic ${HARPERDB_TOKEN}`,
-      },
-    });
-    res.json(response.data);
-  } catch (error) {
-    return res.json(error.response.data.error);
-  }
+  db.searchByHash(
+    {
+      operation: "search_by_hash",
+      schema: body.schema,
+      table: body.table,
+      hashValues: body.hash_values,
+      attributes: body.get_attributes,
+    },
+    (err, response) => {
+      if (err) {
+        return res.status(500).json(err);
+      }
+
+      res.status(response.statusCode).json(response.data);
+    }
+  );
+});
+
+// Get all Movies under action table
+app.post("/movie/action/searchbyvalue", async (req, res) => {
+  const { body } = req;
+
+  db.searchByValue(
+    {
+      operation: "search_by_value",
+      schema: body.schema,
+      table: body.table,
+      searchAttribute: body.search_attribute,
+      searchValue: body.search_value,
+      attributes: body.get_attributes,
+    },
+    (err, response) => {
+      if (err) {
+        return res.status(500).json(err);
+      }
+
+      res.status(response.statusCode).json(response.data);
+    }
+  );
 });
 
 // Update Movie or Movies under action table
 app.post("/movie/action/update", async (req, res) => {
   const { body } = req;
 
-  try {
-    const response = await axios({
-      method: "post",
-      url: HARPERDB_URL,
-      data: body,
-      headers: {
-        Authorization: `Basic ${HARPERDB_TOKEN}`,
-      },
-    });
-    res.json(response.data);
-  } catch (error) {
-    return res.json(error.response.data.error);
-  }
+  db.update(
+    {
+      operation: "update",
+      schema: body.schema,
+      table: body.table,
+      records: body.records,
+    },
+    (err, response) => {
+      if (err) {
+        return res.status(500).json(err);
+      }
+
+      res.status(response.statusCode).json(response.data);
+    }
+  );
 });
 
 // Upsert a new row in a Movie or Movies under action table
 app.post("/movie/action/upsert", async (req, res) => {
   const { body } = req;
 
-  try {
-    const response = await axios({
-      method: "post",
-      url: HARPERDB_URL,
-      data: body,
-      headers: {
-        Authorization: `Basic ${HARPERDB_TOKEN}`,
-      },
-    });
-    res.json(response.data);
-  } catch (error) {
-    return res.json(error.response.data.error);
-  }
+  db.upsert(
+    {
+      operation: "upsert",
+      schema: body.schema,
+      table: body.table,
+      records: body.records,
+    },
+    (err, response) => {
+      if (err) {
+        return res.status(500).json(err);
+      }
+
+      res.status(response.statusCode).json(response.data);
+    }
+  );
 });
 
 // Delete a new row in a Movie or Movies under action table
 app.post("/movie/action/delete", async (req, res) => {
   const { body } = req;
 
-  try {
-    const response = await axios({
-      method: "post",
-      url: HARPERDB_URL,
-      data: body,
-      headers: {
-        Authorization: `Basic ${HARPERDB_TOKEN}`,
-      },
-    });
-    res.json(response.data);
-  } catch (error) {
-    return res.json(error.response.data.error);
-  }
+  db.delete(
+    {
+      operation: "delete",
+      schema: body.schema,
+      table: body.table,
+      hashValues: body.hash_values,
+    },
+    (err, response) => {
+      if (err) {
+        return res.status(500).json(err);
+      }
+
+      res.status(response.statusCode).json(response.data);
+    }
+  );
 });
 
 module.exports = app;
