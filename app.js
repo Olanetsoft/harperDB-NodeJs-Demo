@@ -1,4 +1,5 @@
 require("dotenv").config();
+const db = require("./config/database");
 const { HARPERDB_URL, HARPERDB_TOKEN } = process.env;
 const axios = require("axios");
 
@@ -9,47 +10,47 @@ const app = express();
 app.use(express.json({ limit: "50mb" }));
 
 app.get("/", (req, res) => {
-  res.send("Hello HarperDB");
+  res.send("Hello HarperDB from Node JS server");
 });
 
 // Create Schema
-app.post("/", async (req, res) => {
+app.post("/create/schema", (req, res) => {
   const { body } = req;
 
-  try {
-    const response = await axios({
-      method: "post",
-      url: HARPERDB_URL,
-      data: body,
-      headers: {
-        Authorization: `Basic ${HARPERDB_TOKEN}`,
-      },
-    });
+  db.createSchema(
+    {
+      operation: "create_schema",
+      schema: body.schema,
+    },
+    (err, response) => {
+      if (err) {
+        return res.status(500).json(err);
+      }
 
-    res.json(response.data.message);
-  } catch (error) {
-    return res.json(error.response.data.error);
-  }
+      res.status(response.statusCode).json(response.data);
+    }
+  );
 });
 
 // Create Table
-app.post("/", async (req, res) => {
+app.post("/create/table", async (req, res) => {
   const { body } = req;
 
-  try {
-    const response = await axios({
-      method: "post",
-      url: HARPERDB_URL,
-      data: body,
-      headers: {
-        Authorization: `Basic ${HARPERDB_TOKEN}`,
-      },
-    });
+  db.createTable(
+    {
+      operation: "create_table",
+      hash_attribute: "id",
+      schema: body.schema,
+      table: body.table,
+    },
+    (err, response) => {
+      if (err) {
+        return res.status(500).json(err);
+      }
 
-    res.json(response.data.message);
-  } catch (error) {
-    return res.json(error.response.data.error);
-  }
+      res.status(response.statusCode).json(response.data);
+    }
+  );
 });
 
 // Create Movies under action table
