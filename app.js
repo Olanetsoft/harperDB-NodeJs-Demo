@@ -30,7 +30,7 @@ app.post("/create/schema", (req, res) => {
 });
 
 // Create Table
-app.post("/create/table", async (req, res) => {
+app.post("/create/table", (req, res) => {
   const { body } = req;
 
   db.createTable(
@@ -51,7 +51,7 @@ app.post("/create/table", async (req, res) => {
 });
 
 // Create a Movie or Movies under action table
-app.post("/movie/action/create", async (req, res) => {
+app.post("/movie/action/create", (req, res) => {
   const { body } = req;
 
   db.insert(
@@ -72,7 +72,7 @@ app.post("/movie/action/create", async (req, res) => {
 });
 
 // Get all Movies under action table
-app.post("/movie/action/searchbyhash", async (req, res) => {
+app.post("/movie/action/searchbyhash", (req, res) => {
   const { body } = req;
 
   db.searchByHash(
@@ -94,7 +94,7 @@ app.post("/movie/action/searchbyhash", async (req, res) => {
 });
 
 // Get all Movies under action table
-app.post("/movie/action/searchbyvalue", async (req, res) => {
+app.post("/movie/action/searchbyvalue", (req, res) => {
   const { body } = req;
 
   db.searchByValue(
@@ -117,7 +117,7 @@ app.post("/movie/action/searchbyvalue", async (req, res) => {
 });
 
 // Update Movie or Movies under action table
-app.post("/movie/action/update", async (req, res) => {
+app.post("/movie/action/update", (req, res) => {
   const { body } = req;
 
   db.update(
@@ -138,7 +138,7 @@ app.post("/movie/action/update", async (req, res) => {
 });
 
 // Upsert a new row in a Movie or Movies under action table
-app.post("/movie/action/upsert", async (req, res) => {
+app.post("/movie/action/upsert", (req, res) => {
   const { body } = req;
 
   db.upsert(
@@ -159,7 +159,7 @@ app.post("/movie/action/upsert", async (req, res) => {
 });
 
 // Delete a new row in a Movie or Movies under action table
-app.post("/movie/action/delete", async (req, res) => {
+app.post("/movie/action/delete", (req, res) => {
   const { body } = req;
 
   db.delete(
